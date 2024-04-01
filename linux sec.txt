@@ -1,0 +1,408 @@
+can you please help me how can i fix these error on Ubuntu 20.04.6 LTS x86_64 please genrate a bash script to fix it here is details also detect and ask for details if required in terminal for examples some servers are using apache and some are using ngnix so tweak will apply accrodignly 
+
+Test type:The panel is not monitoringRisk level:Low risk
+Risk detail:Risk-free
+Suggest:1. Open it in [Monitor] - [System Monitor]
+Tips:Enable server monitoring, you can record the recent operation of the server, to facilitate the troubleshooting of system anomalies.
+
+Test type:Check if the user outside the whell group su is disabled as rootRisk level:Low risk
+Risk detail:Risk-free, But the whell group user can su is not configured
+Suggest:1. In the file [/etc/pam.d/su] add auth sufficient pam_rootok.so and auth required pam_wheel.so group=wheel
+2. To configure the user to switch to root, add the user to the wheel group with gpasswd -d a username wheel
+Tips:This scheme enhances the protection of server permissions by forbidding low-privilege users to switch to root user. Make sure that there is no need for the business to switch root before fixing, otherwise ignore this risk item.
+
+Test type:WAF firewall detectionRisk level:Low risk
+Risk detail:If the WAF firewall is not installed, the server website is vulnerable to attacks and there is a security risk
+Suggest:1. It is recommended to install a WAF firewall, such as: Pagoda Nginx Firewall, Pagoda Apache Firewall, Nginx Free Firewall, etc.
+2. Note: Only one type of WAF firewall can be installed. Installing too many WAF firewalls may cause your website to be abnormal and increase unnecessary server overhead
+Tips:WAF firewall is the first line of defense to protect the server, can block external network attacks, to ensure the safe and stable operation of the website.
+
+Test type:Web log detectionRisk level:Low risk
+Risk detail:Risk-free
+Suggest:1. In the [Scheduled Task] page, set the log cutting of the specified website or all websites once a day and save more than 180 copies
+2. Tip: According to Article 21 of the Network Security Law, network logs should be retained for no less than six months.
+Tips:This solution can help discover the risk of external intrusions and vulnerabilities by retaining logs to ensure the security of your website. Make sure you have enough log space.
+
+Test type:TCP-SYNcookie protection detectionRisk level:Low risk
+Risk detail:Risk-free
+Suggest:1. Add net.ipv4.tcp_syncookies=1 in [/etc/sysctl.conf] file
+2. Then execute the command sysctl -p to effect the configuration
+Tips:This scheme can alleviate network flood attacks and enhance the stability of server operation.
+
+Test type:Website certificate (SSL)Risk level:Low risk
+Risk detail:Rick-free
+Suggest:1. Please consider deploying an SSL certificate for your website to improve its security
+Tips:SSL certificates ensure that the communication on your website is secure, preventing hackers from stealing data while it is in transit.
+
+Test type:Website anti-cross-site detectionRisk level:Low risk
+Risk detail:Rick-free
+Suggest:1. On the [WebSite] page, [Settings]-[Site Directory], turn on the [Anti-cross-site attack (open_basedir)] function
+Tips:This solution can prevent hackers from stealing server information across directories, and strengthen the protection of the website.
+
+Test type:SSH securityRisk level:Low risk
+Risk detail:The default SSH port has been modified
+Suggest:1. Modify the SSH port on the [Security] page, and consider turning off [SSH password login] in [SSH security management], and turning on [SSH key login]
+2. If SSH connection service is not required, it is recommended to disable SSH service on the [Security] page
+3. Through the [System Firewall] plug-in or in the [Security Group] modify the release behavior of the SSH port to limit the IP to enhance security
+4. Use [Fail2ban] plug-in to protect SSH service
+Tips:This solution reduces the risk of a breach by changing the default SSH login port. Noteafter the fix, you'll need to change the SSH port that the relevant business logs on to.
+
+Test type:MySQL securityRisk level:Medium risk
+Risk detail:Risk-free
+Suggest:1. If not necessary, remove the MySQL port release from the [Security] page
+2. Restrict IP access to MySQL port through the [System firewall] plug-in to enhance security
+3. Use [ Fail2ban ] plug-in to protect MySQL service
+Tips:This scheme strengthens the protection of the MySQL database and reduces the risk of the server being stolen data. Before the repair, open up the accessible IP according to the business requirements to ensure that the website is working properly.
+
+Test type:Whether to use encrypted remote administration sshRisk level:Medium risk
+Risk detail:Risk-free
+Suggest:1. Add or modify Protocol 2 in [/etc/ssh/sshd_config] file
+2. Then run the command systemctl restart sshd to restart the process
+Tips:This scheme can enhance the protection of SSH communication and avoid sensitive data leakage.
+
+Test type:Docker critical file permission checksRisk level:Medium risk
+Risk detail:Risk-free
+Suggest:1. On the File page, set the correct permissions and owners for the specified directory or file
+2. docker.service and docker.socket require permission [644]
+3. docker directory chmod /etc/docker 755
+Tips:This solution strengthens the protection of Docker files and prevents intruders from tampering with Docker files.
+
+Test type:Memcached securityRisk level:Medium risk
+Risk detail:Risk-free
+Suggest:1. Do not configure bindIP for Memcached as 0.0.0.0 unless necessary
+2. If bindIP is 0.0.0.0, be sure to set IP access restrictions through the [SYS firewall] plugin or the Security group
+Tips:This solution can reduce the risk exposure of the server and strengthen the protection of the website. However, it is necessary to set the accessible IP according to the business requirements.
+
+Test type:Whether hard link protection is enabledRisk level:Medium risk
+Risk detail:Risk-free
+Suggest:1. operation is as follows: sysctl -w fs.protected_hardlinks=1
+Tips:By enabling this kernel parameter, users can no longer create soft or hard links to files they do not own, which reduces the vulnerability of privileged programs to access insecure filesystems and enhances server security.
+
+Test type:Disable non-encrypted remote management telnetRisk level:Medium risk
+Risk detail:Risk-free
+Suggest:1. Use encrypted remote management sshd service as much as possible, and close unsafe telnet service
+2. systemctl stop telnet.socket stop telnet service
+Tips:This scheme shuts down the insecure telnet service, reducing the risk of data leakage. If the business requires telnet, this risk term is ignored.
+
+Test type:Panel portRisk level:Medium risk
+Risk detail:Rick-free
+Suggest:1. Please modify the default panel port on the [Settings] page
+2. Note: Servers with [Security Group] should release the new port in the [Security Group] in advance to prevent the new port cannot be opened
+Tips:This solution can strengthen the panel protection and reduce the risk of the panel being attacked.
+
+Test type:Check if an empty password sudo is allowedRisk level:Medium risk
+Risk detail:Risk-free
+Suggest:1. Open /etc/sudoers or /etc/sudoers.d
+2. Remove or comment the line of the [NOPASSWD] marker
+3. Or handle security risks with one-click fixes.
+Tips:When sudo uses the [NOPASSWD] flag, it allows users to execute commands using sudo without authenticating. This insecure configuration can lead to hackers gaining advanced privileges on the server.
+
+
+Test type:PHP is giving an error messageRisk level:Medium risk
+Risk detail:Risk-free
+Suggest:1. According to the risk description, find the corresponding version of PHP plugin in [Software Store] - [Running Environment], and in [Configuration Modification] page, set display_errors to off and save.
+Tips:PHP error prompts may reveal sensitive information about your site's applications; This solution prevents website information from leaking by turning off the [display_errors] option
+
+Test type:Forbid the root user to log in to FTPRisk level:Medium risk
+Risk detail:Risk-free
+Suggest:1. Modify the value of MinUID to 100 in the [/www/server/pure-ftpd/etc/pure-ftpd.conf] configuration file
+Tips:This solution can be used to enhance the protection of your FTP server. After configuration, the root user cannot login ftp, use with caution.
+
+Test type:Disable anonymous FTP loginRisk level:Medium risk
+Risk detail:Risk-free
+Suggest:1. Modify the value of NoAnonymous to yes in the [/www/server/pure-ftpd/etc/pure-ftpd.conf] configuration file
+Tips:This scheme can enhance the FTP server protection, prevent illegal intrusion into the server. Unable to log in to the FTP server using Anonymous after configuration.
+
+Test type:Whether core dumps are restrictedRisk level:Medium risk
+Risk detail:Risk-free
+Suggest:1. operation is as follows: sysctl -w fs.suid_dumpable=0
+Tips:Core dumps of setuid programs are more likely to contain sensitive data, and limiting the ability of any setuid program to write to core files reduces the risk of sensitive data leakage.
+
+Test type:System firewallRisk level:Medium risk
+Risk detail:Risk-free
+Suggest:1. It is recommended to enable the system firewall to prevent all server ports from being exposed to the Internet. If the server has [security group] function, please ignore this prompt
+2. Note: To open the system firewall, the ports that need to be opened, especially SSH and panel ports, should be added to the release list in advance, otherwise the server may not be able to access them
+Tips:This solution can reduce the risk surface of the server exposure and enhance the protection of the website. However, you need to add the port that needs to be opened at the port rule, otherwise the website will be unreachable.
+
+
+Test type:User FTP access security configurationRisk level:Medium risk
+Risk detail:Risk-free
+Suggest:1. In [/www/server/pure-ftpd/etc/pure-ftpd.conf] change the value of Umask to 177:077 in the config file
+Tips:This scheme can enhance the protection of FTP server and reduce the risk of server intrusion.
+
+
+Test type:Apache TRACE request checksRisk level:Medium risk
+Risk detail:Risk-free
+Suggest:1. Set TraceEnable off in [httpd.conf] file and restart Apache server
+2. Or handle security risks with one-click fixes.
+Tips:TRACE request is generally used to test HTTP protocol. Attackers may use TRACE request combined with other vulnerabilities to perform cross-site scripting attacks to obtain sensitive information.
+
+Test type:Check for dangerous remote access filesRisk level:Medium risk
+Risk detail:Risk-free
+Suggest:1. Delete the .rhosts and .netrc files in the home directory and delete the hosts.equiv file in the root directory
+2. Follow the prompts to find the risk file and delete it
+Tips:This solution removes all vulnerable files, preventing them from being exploited by hackers to gain access to the server. You can backup files before deleting them to prevent them from affecting the operation of your website.
+
+Test type:Website certificate expiredRisk level:Medium risk
+Risk detail:Rick-free
+Suggest:1. Please renew or replace with a new SSL certificate for your site to avoid affecting normal website access
+2. After the SSL certificate expires, the user will be prompted by the browser to access the website as insecure, and most browsers will block access, seriously affecting online business
+Tips:SSL certificates ensure that the communication on your website is secure, preventing hackers from stealing data while it is in transit.
+
+Test type:Check temporary directory for sticky bitRisk level:Medium risk
+Risk detail:Risk-free
+Suggest:1. Use the chmod +t [file name] command to modify the permissions of the file
+Tips:This solution prevents system users from accidentally deleting files on the server.
+
+Test type:Apache version leakRisk level:Medium risk
+Risk detail:Risk-free
+Suggest:1. Add ServerSignature Off and ServerTokens Prod to the [httpd.conf] file
+Tips:This solution can enhance the protection of your server and reduce the risk of your website being compromised.
+
+Test type:SSH password length checkRisk level:Medium risk
+Risk detail:Risk-free
+Suggest:1. In the [/etc/security/pwquality.conf] file, set minlen (minimum password length) to 9-32 bits
+2. minlen=9
+Tips:This solution enforces a minimum login password length, reducing the risk of server blow-up.
+
+Test type:File Recycle BinRisk level:Medium risk
+Risk detail:Risk-free
+Suggest:1. On the [File] page, [Recycle Bin] - opens the [File Recycle Bin] function
+Tips:This solution prevents files from being deleted by mistake and restores them through the recycle bin in time.
+
+Test type:User default permission checkRisk level:Medium risk
+Risk detail:Risk-free
+Suggest:1. 【/etc/profile] The umask set in the file is 002, which does not meet the requirements. It is recommended to set it to 027
+2. Fix: modify umask to 027
+Tips:This scheme can strengthen the control of user permissions and avoid excessive user privileges.
+
+Test type:Check minimum interval between SSH password changesRisk level:Medium risk
+Risk detail:Risk-free
+Suggest:1. [/etc/login.defs] PASS_MIN_DAYS should be set to be greater than or equal to 7
+2. PASS_MIN_DAYS 7 needs to execute the command at the same time to set the expiration time of the root password. The command is as follows: chage --mindays 7 root
+Tips:This solution sets the number of days after the SSH login password is changed, it cannot be changed again.
+
+Test type:Check for files with suid and sgid permissionsRisk level:Medium risk
+Risk detail:Risk-free
+Suggest:1. Use the chmod u-s/g-s [filename] command to change the permissions of the file
+Tips:This scheme removes the special permissions of important files, which can prevent intruders from using these files for privilege escalation.
+
+Test type:Check password reuse limitRisk level:Medium risk
+Risk detail:Risk-free
+Suggest:1. Configuration file backup: cp -p /etc/pam.d/system-auth /etc/pam.d/system-auth.bak
+2. Add or modify remember=5 after [password sufficient] in [/etc/pam.d/system-auth] file
+Tips:This scheme enhances server access control protection by limiting the number of times login passwords are reused.
+
+Test type:SSH password complexity checkRisk level:Medium risk
+Risk detail:Risk-free
+Suggest:1. 【/etc/security/pwquality.conf】 Set password complexity to require 3 or 4 types of characters, such as lowercase letters, uppercase letters, numbers, and special characters. like：
+2. minclass=3
+Tips:This scheme strengthens the complexity of the server login password and reduces the risk of being successfully exploded.
+
+
+est type:Enable kernel.randomize_va_spaceRisk level:Medium risk
+Risk detail:Risk-free
+Suggest:1. [/proc/sys/kernel/randomize_va_space] value is 2:
+2. How to set：sysctl -w kernel.randomize_va_space=2
+Tips:This scheme can reduce the risk of intrusers using buffer overflow to attack the server, and strengthen the protection of the server.
+
+Test type:Nginx version leakedRisk level:Medium risk
+Risk detail:Risk-free
+Suggest:1. Set [server_tokens off;] in the [/www/server/nginx/conf/nginx.conf] file;
+2. Tips：server_tokens off;
+Tips:This solution enhances server protection and reduces the risk of your website being compromised.
+
+Test type:Whether to enable soft link protectionRisk level:Medium risk
+Risk detail:Risk-free
+Suggest:1. operation is as follows: sysctl -w fs.protected_symlinks=1
+Tips:By enabling this kernel parameter, symbolic links are only allowed to be tracked if they are outside the sticky global writable directory, or if the directory owner matches the owner of the symbolic link. Banning such symbolic links helps mitigate vulnerabilities in insecure file systems based on privileged program access.
+
+Test type:Database backupRisk level:Medium risk
+Risk detail:Risk-free
+Suggest:1. On the [ Cron ] page, set the database that is not backed up, or set all databases to be backed up
+2. Tip: if the database is not set up for regular backup, once the data is lost accidentally and cannot be recovered, the loss will be huge
+Tips:This solution prevents data loss in the database and keeps data safe.
+
+Test type:bootloader Configuring permissionsRisk level:Medium risk
+Risk detail:Risk-free
+Suggest:1. Configure secure permissions for grub according to the file suggested by the risk description
+2. If grub2, then: chmod 600 /boot/grub2/grub.cfg、chown root /boot/grub2/grub.cfg
+3. If grub, then: chmod 600 /boot/grub/grub.cfg、chown root /boot/grub/grub.cfg
+Tips:This scheme can strengthen the server grub interface protection, further prevent external intrusion server.
+
+Test type:Pypi supply chain poisoning detectionRisk level:Medium risk
+Risk detail:Risk-free
+Suggest:1. Execute the command btpip uninstall [detected malicious library name]
+Tips:This solution can remove vulnerable packages from the server and prevent them from being exploited by hackers. Before executing the solution command, make sure that the malicious library name is not a dependency library of normal business, otherwise it may affect the operation of the website.
+
+Test type:SSH connection attemptsRisk level:Medium risk
+Risk detail:Rick-free
+Suggest:1. Set [MaxAuthTries] to 3-5 in the [/etc/ssh/sshd_config] file
+2. Tips: Set [MaxAuthTries] to 3-5 in the [/etc/ssh/sshd_config] file
+Tips:This reduces the risk of server intrusion by reducing the maximum number of SSH connections. Note Before fixing, confirm the number of simultaneous connections that SSH needs to support to prevent affecting normal business operations.
+
+Test type:Docker API unauthorized accessRisk level:High risk
+Risk detail:Risk-free
+Suggest:1. Authentication should be turned on to authenticate or turn off the Docker Api
+Tips:This solution fixes Docker's unauthorized access vulnerability, preventing attackers from using Docker to break into the server. We need to restrict API access to ensure that it does not affect the original website business operation.
+
+Test type:Check the tmp directory for the existence of abnormal Trojan filesRisk level:High risk
+Risk detail:Risk-free
+Suggest:1. Delete the detected abnormal Trojan file according to the description
+Tips:This file conforms to the characteristics of a Trojan file. It is recommended to delete and reinstall the nginx server, and conduct a comprehensive security check on the server
+
+Test type:tomcat Background Access Weak Password DetectionRisk level:High risk
+Risk detail:Risk-free
+Suggest:1. Change password weak password in【/usr/local/bttomcat/tomcat/conf/tomcat-users.xml】
+Tips:This scheme by strengthening the tomcat background login password strength, reduce the risk of being exploded, to avoid hackers using tomcat to invade the server.
+
+
+Test type:strace obtains login credentials backdoor detectionRisk level:High risk
+Risk detail:Risk-free
+Suggest:1. The ps aux command checks whether there are sshd login credentials read through strace
+2. ps aux | grep strace
+3. If the process is filtered out, use the kill -9 [pid] command to stop the process
+Tips:detects the existence of hacker intrusion on the server, and the hacker behavior can be interrupted in time through the scheme command to prevent the server from being further invaded and controlled.
+
+Test type:PHP configuration file failure detectionRisk level:High risk
+Risk detail:Risk-free
+Suggest:1. According to the risk description, find the corresponding version of PHP plugin in [Software Store] - [Running Environment].
+2. On the [Configuration] page, go to auto_prepend_file or auto_append_file, delete the rest, save and restart PHP.
+Tips:This solution removes malicious code from php configuration files and suggests a full Trojan scan of the server to remove backdoor files and fix website vulnerabilities.
+
+Test type:Check if the nginx config file is compromisedRisk level:High risk
+Risk detail:Risk-free
+Suggest:1. Follow the prompts to find the nginx config file and delete the js hang-up content
+2. Restart nginx server
+Tips:Before fixing it manually, it is recommended to make a backup of the configuration file in case the service fails to start. Or use one click to fix
+
+Test type:Developer ModeRisk level:High risk
+Risk detail:Risk-free
+Suggest:1. Turn off developer mode on the [ Settings ] page
+2. Note: Developer mode is only used for panel plug-in or API development, do not use in production environment
+Tips:This solution prevents the disclosure of sensitive information and reduces the risk of your website being compromised.
+
+Test type:PHP Dangerous FunctionsRisk level:High risk
+Risk detail:Risk-free
+Suggest:1. [disable_functions] is not set in the [php.ini] file to disable dangerous functions such as system, exec, passthru, shell_exec, popen, proc_open, etc.
+2. Tips: [disable_functions] is not set in the [php.ini] file to disable dangerous functions such as system, exec, passthru, shell_exec, popen, proc_open, etc.
+Tips:This solution can strengthen the protection of the website and reduce the risk of server intrusion.
+
+Test type:Check nginx binaries for tamperingRisk level:High risk
+Risk detail:Risk-free
+Suggest:1. Reinstall Nginx in panel [Software Store] - [Run Environment]
+Tips:/ WWW/server/nginx/sbin/nginx executable been tampered with, risk was invaded site.
+
+Test type:System backdoor user detectionRisk level:High risk
+Risk detail:No backdoor users are currently found
+Suggest:1. Delete backdoor user in command line
+2. Note: If there is a backdoor user, it means that your server has been invaded
+Tips:This scheme will remove the backdoor users with the same privileges as the root user, and enhance the protection of the server permission control. If it is a business requirement, this risk term is ignored.
+
+Test type:PHP version leakedRisk level:High risk
+Risk detail:Risk-free
+Suggest:1. Set [expose_php] in the [php.ini] file and configure it to Off
+2. Tips: Set [expose_php] in the [php.ini] file and configure it to Off
+Tips:This solution can prevent the disclosure of sensitive information on the website and reduce the possibility of server intrusion.
+
+Test type:Prohibit SSH login with empty passwordRisk level:High risk
+Risk detail:Rick-free
+Suggest:1. Set [PermitEmptyPasswords] in the [/etc/ssh/sshd_config] file to configure it to no
+2. Tips: Set [PermitEmptyPasswords] in the [/etc/ssh/sshd_config] file to configure it to no
+Tips:This scheme prevents the server from logging in with an empty password. Note that the server cannot login with an empty password after the repair. Ensure that the login password is configured synchronously for related business access.
+
+Test type:Mysql weak password detectionRisk level:High risk
+Risk detail:Risk-free
+Suggest:1. If a weak password is detected, please change the password in time
+Tips:This scheme increases the strength of the database password and reduces the risk of being successfully exploded.
+
+Test type:Redis securityRisk level:High risk
+Risk detail:Rick-free
+Suggest:1. If not necessary, please do not configure Redis bind to 0.0.0.0
+2. If bind is 0.0.0.0, be sure to set an access password for Redis
+3. Do not use too simple password as Redis access password
+4. Strong passwords are recommended: numeric, upper - and lowercase, special characters, and no less than seven characters long.
+5. If there is a security problem in Redis, it will lead to a high probability of server intrusion, please be sure to deal with it carefully.
+Tips:This solution can strengthen the protection of Redis database and reduce the risk of server intrusion. When fixing the risk, make sure that you have opened the IP access of the relevant website, and change the access password synchronously to prevent the server from being unable to access Redis.
+
+Test type:Check if an empty password user existsRisk level:High risk
+Risk detail:Risk-free
+Suggest:1. Log in to server as root, set password for empty password user
+2. If you do not know the user's purpose, you can execute the command [passwd -l (username)] to temporarily block the user.Unlock user command [passwd-fu (username)]
+Tips:detects the existence of blank password users, may be hackers reserved backdoor users, if not business needs to suggest setting a password.
+
+Test type:Database backup permission detectionRisk level:High risk
+Risk detail:Risk-free
+Suggest:1. To temporarily enter the database without authorization, it is recommended to restore all permissions of the root user.
+Tips:This scheme ensures that the root user has the permission to backup the database and ensures that the database backup work is carried out.
+
+Test type:Database backup permission detectionRisk level:High risk
+Risk detail:Risk-free
+Suggest:1. To temporarily access the database without authorization, it is recommended to restore all permissions of the root user.
+Tips:This scheme ensures that the root user has the permission to backup the database and ensures that the database backup work is carried out.
+
+Test type:CVE-2023-0386 Linux Kernel OverlayFS VulnerabilityRisk level:High risk
+Risk detail:The current kernel version [5.15.0-1059-azure ] is risk-free
+Suggest:1. Check whether the kernel version is lower than the specified version according to the prompt [uname -r]
+2. If is CentOS 8 Stream, execute [yum install kernel] command to upgrade the kernel version, and restart the server
+3. If it Ubuntu 22.04, execute [apt install linux-image] to check the installable version number, select version number higher than 5.15.0-70, execute [apt install linux-image-version_number] again, and restart the server
+Tips:The above kernel upgrade operation has certain risks, it is strongly recommended that the server do a snapshot backup first, in case the operation fails to restore in time!
+
+Test type:Whether to enable security authentication for MongoDBRisk level:High risk
+Risk detail:Risk-free，The MongoDB service has not been started！
+Suggest:1. Turn on the security authentication switch in the aaPanel Databases MongoDB
+Tips:This is a great way to protect your database against hackers trying to steal data from your mongo database.
+
+Test type:Weak password detection for FTP servicesRisk level:High risk
+Risk detail:Risk-free
+Suggest:1. Please go to [FTP] page to change the FTP password
+2. Note: Please do not use too simple account password, so as not to cause security risks
+3. Strong passwords are recommended: numeric, upper - and lowercase, special characters, and no less than seven characters long.
+4. Using [Fail2ban] plugin to protect FTP server
+Tips:This scheme can strengthen the protection of the FTP server, to prevent intruders from blasting into the FTP server.
+
+Test type:Redis weak passwordRisk level:High risk
+Risk detail:Risk-free
+Suggest:1. 1.Redis passwords are too simple2.Please change your password in time
+Tips:This solution reduces the risk of server intrusion by strengthening the database login password.
+
+Test type:Safe entranceRisk level:High risk
+Risk detail:Risk-free
+Suggest:1. Please modify the security entrance on the [Settings] page
+2. Set the binding domain name on the [Settings] page, or set authorized IP restrictions
+3. Note: Please do not set up too simple safety entrance, which may cause safety hazards
+Tips:This solution can strengthen the panel login entry protection, improve server security.
+
+Test type:SSH idle timeout detectionRisk level:Medium risk
+Risk detail:The current SSH idle timeout time is: 0, it is recommended to set it to 600-900
+Solution:1. Set [ClientAliveInterval] in the [/etc/ssh/sshd_config] file to be between 600 and 900
+2. Tip: The recommended SSH idle timeout time is: 600-900
+Tips:This scheme can enhance the security of SSH service, after the repair of SSH connection for a long time without operation will automatically quit, to prevent others from using.
+
+Test type:Panel login alarmRisk level:Medium risk
+Risk detail:Please enable it in [Settings] - [Notification]
+Solution:1. Enable it in [Settings] - [Notification]
+Tips:This solution can strengthen the panel protection and reduce the risk of the panel being attacked.
+
+Test type:SSH Login timeout configuration detectionRisk level:Medium risk
+Risk detail:The SSH login timeout configuration is not enabled
+Solution:1. Set [LoginGraceTime] to 60 in [/etc/ssh/sshd_config] file
+Tips:Setting the LoginGraceTime parameter to a small number minimizes the risk of a successful brute force attack on the SSH server. It will also limit the number of concurrent unauthenticated connections.
+
+Test type:Check if the command-line interface timeout is setRisk level:Medium risk
+Risk detail:No command line timeout is configured for exit
+Solution:1. Add tmout=300 in the file [/etc/profile], and the waiting time is not more than 600 seconds
+2. Execute source /etc/profile to make the configuration work
+Tips:This solution will make the server command line over a certain period of time does not operate automatically shut down, can strengthen the security of the server.
+
+Test type:Check alias configurationRisk level:Low risk
+Risk detail:rm The command does not have an alias configured or is configured incorrectly
+Solution:1. Add or modify alias ls='ls -alh' and alias rm='rm -i' in the file [~/.bashrc]
+2. Execute [source ~/.bashrc] to make the configuration take effect
+Tips:This scheme can make ls command list more detailed file information and reduce the risk of rm command deleting files by mistake, but it may affect the original operation habits.
+
+Test type:ssh access control list checkingRisk level:Low risk
+Risk detail:ssh login whitelist is not set
+Solution:1. add ALL:ALL in 【/etc/hosts.deny】
+2. add sshd:【visitor IP address】 in【/etc/hosts.allow】
+Tips:This scheme will block the rest of the IP except the white list to login the server, and enhance the security protection of the server. Note that this solution is risky; be sure to add an IP address to the server before you fix it.
